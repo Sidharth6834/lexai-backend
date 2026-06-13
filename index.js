@@ -57,7 +57,7 @@ app.get('/api/shared/:token', getSharedDocument);
 
 // Basic sanity/health check route
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'LexAI API is running smoothly' });
+  res.json({ status: 'ok', message: 'LegalMind API is running smoothly' });
 });
 
 // Catch 404 and forward to error handler

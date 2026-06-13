@@ -54,7 +54,7 @@ const startExpiryReminderJob = () => {
     }
   });
   
-  console.log('LexAI Expiry Reminder Cron Job scheduled (daily at 9:00 AM).');
+  console.log('LegalMind Expiry Reminder Cron Job scheduled (daily at 9:00 AM).');
 };
 
 export default startExpiryReminderJob;

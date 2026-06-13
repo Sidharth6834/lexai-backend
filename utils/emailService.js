@@ -106,14 +106,14 @@ export const sendAnalysisCompleteEmail = async (userEmail, userName, document) =
     <html>
     <head>
       <meta charset="utf-8">
-      <title>LexAI Document Analysis Complete</title>
+      <title>LegalMind Document Analysis Complete</title>
     </head>
     <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f6f9fc; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased;">
       <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e6ebf1;">
         <!-- Header -->
         <tr>
           <td style="background-color: #0f3460; padding: 30px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">LexAI</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">LegalMind</h1>
           </td>
         </tr>
         <!-- Content -->
@@ -153,7 +153,7 @@ export const sendAnalysisCompleteEmail = async (userEmail, userName, document) =
               This analysis is for informational purposes only. Consult a qualified lawyer for legal advice.
             </p>
             <p style="font-size: 13px; color: #4b5563; font-weight: bold; margin: 0;">
-              — The LexAI Team
+              — The LegalMind Team
             </p>
           </td>
         </tr>
@@ -163,9 +163,9 @@ export const sendAnalysisCompleteEmail = async (userEmail, userName, document) =
   `;
 
   const mailOptions = {
-    from: `"LexAI" <${process.env.EMAIL_USER}>`,
+    from: `"LegalMind" <${process.env.EMAIL_USER}>`,
     to: userEmail,
-    subject: `LexAI Analysis Complete — ${docName}`,
+    subject: `LegalMind Analysis Complete — ${docName}`,
     html: emailHtml,
   };
 
@@ -219,7 +219,7 @@ export const sendExpiryReminderEmail = async (userEmail, userName, document, day
         <!-- Header -->
         <tr>
           <td style="background-color: #0f3460; padding: 30px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">LexAI</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">LegalMind</h1>
           </td>
         </tr>
         <!-- Content -->
@@ -254,7 +254,7 @@ export const sendExpiryReminderEmail = async (userEmail, userName, document, day
               This analysis is for informational purposes only. Consult a qualified lawyer for legal advice.
             </p>
             <p style="font-size: 13px; color: #4b5563; font-weight: bold; margin: 0;">
-              — The LexAI Team
+              — The LegalMind Team
             </p>
           </td>
         </tr>
@@ -264,7 +264,7 @@ export const sendExpiryReminderEmail = async (userEmail, userName, document, day
   `;
 
   const mailOptions = {
-    from: `"LexAI" <${process.env.EMAIL_USER}>`,
+    from: `"LegalMind" <${process.env.EMAIL_USER}>`,
     to: userEmail,
     subject: `Reminder: Your ${docType} expires in ${daysLeft} days`,
     html: emailHtml,
@@ -278,10 +278,10 @@ export const sendExpiryReminderEmail = async (userEmail, userName, document, day
  */
 export const sendOtpEmail = async (userEmail, otp, type) => {
   const isRegister = type === 'register';
-  const subject = isRegister ? 'LexAI — Verify Your Account' : 'LexAI — Reset Your Password';
+  const subject = isRegister ? 'LegalMind — Verify Your Account' : 'LegalMind — Reset Your Password';
   const titleText = isRegister ? 'Verify Your Account' : 'Reset Your Password';
   const bodyText = isRegister 
-    ? 'Thank you for signing up for LexAI. Use the verification code below to complete your registration:' 
+    ? 'Thank you for signing up for LegalMind. Use the verification code below to complete your registration:' 
     : 'We received a request to reset your password. Use the verification code below to set a new password:';
   
   const emailHtml = `
@@ -296,7 +296,7 @@ export const sendOtpEmail = async (userEmail, otp, type) => {
         <!-- Header -->
         <tr>
           <td style="background-color: #0f3460; padding: 30px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">LexAI</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">LegalMind</h1>
           </td>
         </tr>
         <!-- Content -->
@@ -323,7 +323,7 @@ export const sendOtpEmail = async (userEmail, otp, type) => {
         <tr>
           <td style="background-color: #fafbfc; border-top: 1px solid #f1f3f7; padding: 25px 30px; text-align: center;">
             <p style="font-size: 13px; color: #4b5563; font-weight: bold; margin: 0;">
-              — The LexAI Team
+              — The LegalMind Team
             </p>
           </td>
         </tr>
@@ -333,7 +333,7 @@ export const sendOtpEmail = async (userEmail, otp, type) => {
   `;
 
   const mailOptions = {
-    from: `"LexAI" <${process.env.EMAIL_USER}>`,
+    from: `"LegalMind" <${process.env.EMAIL_USER}>`,
     to: userEmail,
     subject: subject,
     html: emailHtml,
