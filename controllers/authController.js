@@ -43,8 +43,10 @@ export const sendRegisterOtp = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Send email
-    await sendOtpEmail(email, otp, 'register');
+    // Send email asynchronously without blocking the client response
+    sendOtpEmail(email, otp, 'register').catch((err) => {
+      console.error('Failed to send registration OTP email:', err.message);
+    });
 
     res.json({ message: 'Verification code sent to your email' });
   } catch (error) {
@@ -231,8 +233,10 @@ export const forgotPassword = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Send reset email
-    await sendOtpEmail(email, otp, 'forgot');
+    // Send reset email asynchronously without blocking the client response
+    sendOtpEmail(email, otp, 'forgot').catch((err) => {
+      console.error('Failed to send password reset OTP email:', err.message);
+    });
 
     res.json({ message: 'Verification code sent to your email' });
   } catch (error) {
