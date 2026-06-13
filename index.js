@@ -24,6 +24,9 @@ startExpiryReminderJob();
 
 const app = express();
 
+// Trust proxy (required for express-rate-limit to identify user IPs on Render)
+app.set('trust proxy', 1);
+
 // Security Headers (configured to allow cross-origin requests for static uploads)
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
