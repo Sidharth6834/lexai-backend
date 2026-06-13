@@ -17,6 +17,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET
 });
 
+const PYTHON_AI_SERVICE_URL = process.env.PYTHON_AI_SERVICE_URL || 'http://localhost:8000';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -169,7 +171,7 @@ export const triggerAnalysis = async (documentId, extractedText, documentType, l
 
         // Call Python AI service
         const response = await axios.post(
-            'http://localhost:8000/analyze',
+            `${PYTHON_AI_SERVICE_URL}/analyze`,
             {
                 documentId: documentId.toString(),
                 extractedText,
@@ -461,7 +463,7 @@ export const sendChat = async (req, res) => {
 
     try {
       // Connect to the Python AI service
-      const response = await axios.post('http://localhost:8000/chat', {
+      const response = await axios.post(`${PYTHON_AI_SERVICE_URL}/chat`, {
         documentId: doc._id,
         message,
         extractedText: doc.extractedText || '',
