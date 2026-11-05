@@ -169,19 +169,37 @@ export const triggerAnalysis = async (documentId, extractedText, documentType, l
         await Document.findByIdAndUpdate(documentId, { status: 'analyzing' });
         console.log(`Document ${documentId} status -> analyzing`);
 
-        // Call Python AI service
-        const response = await axios.post(
-            `${PYTHON_AI_SERVICE_URL}/analyze`,
-            {
-                documentId: documentId.toString(),
-                extractedText,
-                documentType,
-                language
-            },
-            { timeout: 120000 } // 2 min timeout for large docs
-        )
+        // Call Python AI service with retry logic (recovers Hugging Face Spaces sleep state)
+        let response;
+        const maxRetries = 3;
+        const retryDelayMs = 15000; // 15 seconds
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                console.log(`Sending analysis request to AI service at ${PYTHON_AI_SERVICE_URL} (Attempt ${attempt}/${maxRetries})...`);
+                response = await axios.post(
+                    `${PYTHON_AI_SERVICE_URL}/analyze`,
+                    {
+                        documentId: documentId.toString(),
+                        extractedText,
+                        documentType,
+                        language
+                    },
+                    { timeout: 90000 } // 90 seconds timeout per attempt
+                );
+                // If succeeded, exit retry loop
+                break;
+            } catch (err) {
+                console.error(`AI service request failed (Attempt ${attempt}/${maxRetries}):`, err.message);
+                if (attempt === maxRetries) {
+                    throw err; // Out of retries, throw to catch block
+                }
+                console.log(`Waiting ${retryDelayMs / 1000} seconds for AI service to boot/recover...`);
+                await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+            }
+        }
         
-        const { summary, overallRisk, clauses } = response.data
+        const { summary, overallRisk, clauses } = response.data;
         
         // Update document in MongoDB with results
         const updatedDoc = await Document.findByIdAndUpdate(
@@ -1002,6 +1020,37 @@ export const getSharedDocument = async (req, res) => {
     };
 
     res.status(200).json(safeDoc);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Retry failed document analysis
+// @route   POST /api/documents/:id/retry
+// @access  Private
+export const retryAnalysis = async (req, res) => {
+  try {
+    const document = await Document.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+
+    if (document.status !== 'failed' && document.status !== 'uploaded') {
+      return res.status(400).json({ message: 'Document analysis is already complete or in progress' });
+    }
+
+    // Set document status back to uploaded
+    document.status = 'uploaded';
+    await document.save();
+
+    // Trigger analysis in the background
+    triggerAnalysis(document._id, document.extractedText, document.type, document.language || 'english');
+
+    res.status(200).json({ message: 'Analysis retried successfully', status: 'uploaded' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

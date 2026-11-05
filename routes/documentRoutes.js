@@ -14,6 +14,7 @@ import {
   updateExpiry,
   shareDocument,
   unshareDocument,
+  retryAnalysis,
 } from '../controllers/documentController.js';
 
 const router = express.Router();
@@ -70,5 +71,8 @@ router.get('/:id', protect, getDocument);
 
 // Route: DELETE /api/documents/:id
 router.delete('/:id', protect, deleteDocument);
+
+// Route: POST /api/documents/:id/retry
+router.post('/:id/retry', protect, retryAnalysis);
 
 export default router;

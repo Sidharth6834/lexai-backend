@@ -158,21 +158,12 @@ export const googleLogin = async (req, res) => {
       return res.status(400).json({ message: 'Google credential is required' });
     }
 
-    let payload;
-    // Developer Sandbox mock mode
-    if (!process.env.GOOGLE_CLIENT_ID || credential.startsWith('mock_')) {
-      payload = {
-        email: 'sidharthkumar8103@gmail.com', // Match user's email for testing
-        name: 'Sidharth Kumar',
-        email_verified: true,
-      };
-    } else {
-      const ticket = await googleClient.verifyIdToken({
-        idToken: credential,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      });
-      payload = ticket.getPayload();
-    }
+    const clientId = process.env.GOOGLE_CLIENT_ID || '490767462902-rnpmt3r27bo20un613m3m1tnovcdgmai.apps.googleusercontent.com';
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: clientId,
+    });
+    const payload = ticket.getPayload();
 
     if (!payload || !payload.email_verified) {
       return res.status(400).json({ message: 'Google email is not verified' });
