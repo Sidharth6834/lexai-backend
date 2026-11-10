@@ -10,6 +10,7 @@ import authRoutes from './routes/authRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import startExpiryReminderJob from './jobs/expiryReminder.js';
+import startKeepAliveJob from './jobs/keepAlive.js';
 import { getSharedDocument } from './controllers/documentController.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,6 +22,7 @@ connectDB();
 
 // Start background cron jobs
 startExpiryReminderJob();
+startKeepAliveJob();
 
 const app = express();
 
@@ -55,9 +57,14 @@ app.use('/api/admin', adminRoutes);
 // Public Shared Document Retrieval (No Auth Required)
 app.get('/api/shared/:token', getSharedDocument);
 
+// Root health check for UptimeRobot (pings the root URL)
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'LegalMind API is live.' });
+});
+
 // Basic sanity/health check route
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'LegalMind API is running smoothly' });
+  res.status(200).json({ status: 'ok', message: 'LegalMind API is running smoothly' });
 });
 
 // Catch 404 and forward to error handler

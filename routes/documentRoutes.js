@@ -33,6 +33,9 @@ const upload = multer({
   },
 });
 
+// Route: POST /api/documents (alias for /upload — used by frontend client)
+router.post('/', protect, upload.single('file'), uploadDocument);
+
 // Route: POST /api/documents/upload
 router.post('/upload', protect, upload.single('file'), uploadDocument);
 
